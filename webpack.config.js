@@ -1,12 +1,14 @@
 const path = require("path");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
-// const deps = require("./package.json").dependencies;
+const ModuleFederationPlugin =
+  require("webpack").container.ModuleFederationPlugin;
+const deps = require("./package.json").dependencies;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./src/bootstrap.tsx",
   mode: "development",
   cache: false,
   target: "web",
@@ -78,6 +80,31 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: "assets/main.css",
+    }),
+    new ModuleFederationPlugin({
+      name: "ModuleName",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./Module": "./src/ExposedApp.tsx",
+        "./ModuleStyles": "./src/assets/main.css",
+      },
+      shared: [
+        deps,
+        {
+          react: {
+            eager: true,
+            singleton: true,
+            requiredVersion: deps.react,
+          },
+        },
+        {
+          "react-dom": {
+            eager: true,
+            singleton: true,
+            requiredVersion: deps["react-dom"],
+          },
+        },
+      ],
     }),
   ],
   devtool: "source-map",

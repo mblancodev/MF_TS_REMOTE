@@ -8,7 +8,7 @@
     "cy:open": "cypress open",
     "build": "webpack --mode production",
     "serve:dev": "webpack serve --mode development",
-    "dev": "concurrently \"npm run start:css\" \"npm run serve:dev\"",
+    "dev": "concurrently \"npm run dev:css\" \"npm run serve:dev\"",
     "prod:css": "tailwindcss -i ./src/assets/tailwind.css -o ./src/assets/main.css",
     "dev:css": "tailwindcss -i ./src/assets/tailwind.css -o ./src/assets/main.css --watch"
   },
